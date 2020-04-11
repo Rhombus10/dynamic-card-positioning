@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>dragger</title>
+		<style type="text/css">
+          button {
+          	position: absolute;
+          	left: 250px;
+          }
+		</style>
+	</head>
+
+	<body>
+    <div id='1' onclick="change(event)" style='height:50px;position:absolute;transition: top 0.2s;width:200px;top:10px;background-color:white;border-radius:10px;box-shadow:0px 0px 10px grey;overflow: hidden;'><div id='onecolour' style='height: 50px;width: 50px;background: rgb(77,161,63);background: linear-gradient(90deg, rgba(77,161,63,1) 0%, rgba(38,247,62,1) 83%, rgba(37,249,62,1) 85%);'></div></div>
+    <button onclick='add()' id='but'>+</button>
+	</body>
+	<script type="text/javascript">
+		var on = -1
+		var target;
+		var num = 1
+		var dragots = ['1']
+		function move(t, e){
+            if (e == true){
+            	var g = dragots.indexOf(t)
+            	dragots[g] = dragots[g+1]
+            	dragots[g+1] = t
+            }else {
+            	var g = dragots.indexOf(t)
+            	dragots[g] = dragots[g-1]
+            	dragots[g-1] = t
+            }
+            document.getElementById(dragots[g]).style.top = (62.5*g) + 10 + 'px'
+
+		}
+		document.onmousemove = function(event){
+            if (on == 1){
+        		document.getElementById(target).style.top = event.clientY-25 + 'px';
+        		//console.log(event.clientY - ((dragots.indexOf(target)*62.5)+35))
+        		if (event.clientY - ((dragots.indexOf(target)*62.5)+35)> 31.25 && dragots.indexOf(target) != dragots.length-1) move(target, true)
+        		if(event.clientY - ((dragots.indexOf(target)*62.5)+35) < -31.25 && dragots.indexOf(target) != 0) move(target, false)
+        	}
+		};
+		function change(e){
+			on = on*-1
+
+			target = e.toElement.id
+			if (on == 1){
+				document.getElementById(target).style.zIndex = 1;
+				document.getElementById(target).style.transition = 'top 0s';
+		    }else{
+			    document.getElementById(target).style.zIndex = 0;
+			    document.getElementById(target).style.transition = 'top 0.2s';
+			    document.getElementById(target).style.top = (62.5*(dragots.indexOf(target))) + 10 + 'px'
+
+		    }   
+	    }
+	    function add(){
+	    	num++
+	    	dragots.push(`${num}`)
+	    	document.getElementById('but').style.visibility = 'hidden';
+	    	var newelement = document.getElementById('1').cloneNode(true)
+	    	newelement.id = `${num}`
+	    	newelement.style.top = (62.5*(num)+10) + 'px';
+	    	newelement.style.transition = 'top 0s'
+	    	document.body.appendChild(newelement);
+	    	var tp = (62.5*(num)+10)
+	    	var p = 0
+	    	var x = setInterval(function(){
+                tp+= -6.25
+                document.getElementById(num).style.top = tp + 'px'
+                p++
+                if (p==10){
+                	clearInterval(x)
+                	document.getElementById('but').style.visibility = 'visible';
+                	document.getElementById(num).style.transition = 'top 0.2s'
+                }
+	    	},10)
+
+
+	    }
+	</script>
+</html>
